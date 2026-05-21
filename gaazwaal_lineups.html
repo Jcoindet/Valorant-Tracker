@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAAZWAAL · LINEUPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080a0f;--bg2:#0d1018;--bg3:#12161f;--bg4:#181d28;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.14);
+  --accent:#ff4655;--accent2:#7b61ff;
+  --green:#4ade80;--amber:#fbbf24;--red:#f87171;--cyan:#22d3ee;
+  --text:#f0f2f8;--text2:#8892a4;--text3:#3a4256;
+  --clove:#c084fc;--sova:#60a5fa;--raze:#fb923c;--harbor:#34d399;
+  --fh:\'Barlow Condensed\',sans-serif;
+  --fb:\'Barlow\',sans-serif;
+  --fm:\'JetBrains Mono\',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;min-height:100vh;overflow-x:hidden}
+body::before{content:\'\';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\' opacity=\'0.04\'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.3}
+body::after{content:\'\';position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),transparent);z-index:100}
+.app{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 24px 80px}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:24px 0 20px;border-bottom:1px solid var(--border);margin-bottom:28px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{width:32px;height:32px;background:var(--accent);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 6px rgba(255,70,85,0.4))}50%{filter:drop-shadow(0 0 16px rgba(255,70,85,0.9))}}
+.logo-text{font-family:var(--fh);font-size:20px;font-weight:800;letter-spacing:.08em}
+.logo-text span{color:var(--accent)}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-family:var(--fh);font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--text2);background:none;border:1px solid transparent;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;align-items:center;gap:6px}
+.nav-link:hover{color:var(--text);border-color:var(--border2);background:var(--bg3)}
+.nav-link.active{color:var(--accent);border-color:rgba(255,70,85,0.3);background:rgba(255,70,85,0.08)}
+
+/* HERO */
+.hero{text-align:center;padding:32px 0 40px;position:relative}
+.hero-title{font-family:var(--fh);font-size:72px;font-weight:900;letter-spacing:.04em;line-height:1;margin-bottom:8px}
+.hero-title span{color:var(--accent)}
+.hero-sub{font-family:var(--fm);font-size:13px;color:var(--text2);letter-spacing:.1em}
+
+/* STEP 1 — AGENT SELECTOR */
+.step-label{font-family:var(--fm);font-size:11px;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.agent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+.agent-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px 16px;cursor:pointer;transition:all .2s;text-align:center;position:relative;overflow:hidden}
+.agent-card::before{content:\'\';position:absolute;inset:0;opacity:0;transition:opacity .2s}
+.agent-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.agent-card.selected{transform:translateY(-2px)}
+.agent-card[data-agent="Clove"].selected{border-color:var(--clove);background:rgba(192,132,252,0.08)}
+.agent-card[data-agent="Clove"].selected::before{background:radial-gradient(ellipse at top,rgba(192,132,252,0.12),transparent);opacity:1}
+.agent-card[data-agent="Sova"].selected{border-color:var(--sova);background:rgba(96,165,250,0.08)}
+.agent-card[data-agent="Sova"].selected::before{background:radial-gradient(ellipse at top,rgba(96,165,250,0.12),transparent);opacity:1}
+.agent-card[data-agent="Raze"].selected{border-color:var(--raze);background:rgba(251,146,60,0.08)}
+.agent-card[data-agent="Raze"].selected::before{background:radial-gradient(ellipse at top,rgba(251,146,60,0.12),transparent);opacity:1}
+.agent-card[data-agent="Harbor"].selected{border-color:var(--harbor);background:rgba(52,211,153,0.08)}
+.agent-card[data-agent="Harbor"].selected::before{background:radial-gradient(ellipse at top,rgba(52,211,153,0.12),transparent);opacity:1}
+.agent-emoji{font-size:36px;margin-bottom:10px;display:block}
+.agent-name{font-family:var(--fh);font-size:20px;font-weight:800;letter-spacing:.06em;margin-bottom:4px}
+.agent-card[data-agent="Clove"] .agent-name{color:var(--clove)}
+.agent-card[data-agent="Sova"] .agent-name{color:var(--sova)}
+.agent-card[data-agent="Raze"] .agent-name{color:var(--raze)}
+.agent-card[data-agent="Harbor"] .agent-name{color:var(--harbor)}
+.agent-role{font-family:var(--fm);font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+
+/* MAP SELECTOR */
+.map-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:32px}
+.map-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px 12px;cursor:pointer;transition:all .2s;text-align:center}
+.map-card:hover{border-color:var(--border2);background:var(--bg3)}
+.map-card.selected{border-color:var(--accent);background:rgba(255,70,85,0.08)}
+.map-card.disabled{opacity:0.3;cursor:not-allowed;pointer-events:none}
+.map-icon{font-size:24px;margin-bottom:6px;display:block}
+.map-name{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.04em;color:var(--text)}
+.map-region{font-family:var(--fm);font-size:10px;color:var(--text3);margin-top:2px}
+
+/* SIDE TOGGLE */
+.side-toggle{display:flex;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:4px;width:fit-content;margin:0 auto 28px}
+.side-btn{font-family:var(--fh);font-size:15px;font-weight:700;letter-spacing:.08em;padding:8px 28px;border:none;background:none;cursor:pointer;border-radius:5px;transition:all .2s;color:var(--text2)}
+.side-btn.active-atk{background:var(--accent);color:#fff}
+.side-btn.active-def{background:var(--accent2);color:#fff}
+
+/* LINEUP CARDS */
+.lineups-area{display:none}
+.lineups-area.visible{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.lineups-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.lineups-title{font-family:var(--fh);font-size:28px;font-weight:800;letter-spacing:.04em}
+.lineups-badge{font-family:var(--fm);font-size:11px;padding:4px 10px;border-radius:4px;font-weight:700}
+.badge-atk{background:rgba(255,70,85,0.15);color:var(--accent);border:1px solid rgba(255,70,85,0.3)}
+.badge-def{background:rgba(123,97,255,0.15);color:var(--accent2);border:1px solid rgba(123,97,255,0.3)}
+.lineup-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.lineup-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;transition:border-color .2s}
+.lineup-card:hover{border-color:var(--border2)}
+.lineup-num{font-family:var(--fm);font-size:10px;color:var(--text3);margin-bottom:8px;letter-spacing:.08em}
+.lineup-name{font-family:var(--fh);font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:.02em}
+.lineup-ability{display:inline-flex;align-items:center;gap:5px;font-family:var(--fm);font-size:11px;padding:3px 8px;border-radius:4px;margin-bottom:12px;font-weight:700}
+.ab-smoke{background:rgba(192,132,252,0.15);color:var(--clove)}
+.ab-recon{background:rgba(96,165,250,0.15);color:var(--sova)}
+.ab-shock{background:rgba(248,113,113,0.15);color:var(--red)}
+.ab-blast{background:rgba(251,146,60,0.15);color:var(--raze)}
+.ab-paint{background:rgba(251,191,36,0.15);color:var(--amber)}
+.ab-boom{background:rgba(251,146,60,0.1);color:var(--raze)}
+.ab-wall{background:rgba(52,211,153,0.15);color:var(--harbor)}
+.ab-cove{background:rgba(52,211,153,0.1);color:var(--harbor)}
+.ab-cascade{background:rgba(34,211,238,0.15);color:var(--cyan)}
+.lineup-steps{list-style:none;display:flex;flex-direction:column;gap:6px}
+.lineup-steps li{display:flex;gap:8px;font-size:13px;color:var(--text2);line-height:1.5}
+.step-num{width:18px;height:18px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;color:var(--text3);flex-shrink:0;margin-top:1px}
+.lineup-tip{margin-top:12px;padding:10px 12px;background:var(--bg3);border-radius:6px;font-size:12px;color:var(--text2);border-left:2px solid var(--amber);line-height:1.5}
+.lineup-tip strong{color:var(--amber)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty-icon{font-size:48px;margin-bottom:16px;display:block}
+.empty-title{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--text2);margin-bottom:8px}
+.empty-sub{font-size:14px;line-height:1.6}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:28px 0}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header>
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div class="logo-text">VAL<span>TRACK</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="gaazwaal_tracker.html" class="nav-link">📊 Dashboard</a>
+    <a href="gaazwaal_lineups.html" class="nav-link active">🎯 Lineups</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-title">LINE<span>UPS</span></div>
+  <div class="hero-sub">GAAZWAAL#GAZ · SÉLECTIONNE TON AGENT, TA MAP ET TON CAMP</div>
+</div>
+
+<!-- STEP 1: AGENT -->
+<div class="step-label">01 — Choisis ton agent</div>
+<div class="agent-grid">
+  <div class="agent-card" data-agent="Clove" onclick="selectAgent('Clove')">
+    <span class="agent-emoji">🌙</span>
+    <div class="agent-name">CLOVE</div>
+    <div class="agent-role">Controller</div>
+  </div>
+  <div class="agent-card" data-agent="Sova" onclick="selectAgent('Sova')">
+    <span class="agent-emoji">🏹</span>
+    <div class="agent-name">SOVA</div>
+    <div class="agent-role">Initiator</div>
+  </div>
+  <div class="agent-card" data-agent="Raze" onclick="selectAgent('Raze')">
+    <span class="agent-emoji">💣</span>
+    <div class="agent-name">RAZE</div>
+    <div class="agent-role">Duelist</div>
+  </div>
+  <div class="agent-card" data-agent="Harbor" onclick="selectAgent('Harbor')">
+    <span class="agent-emoji">🌊</span>
+    <div class="agent-name">HARBOR</div>
+    <div class="agent-role">Controller</div>
+  </div>
+</div>
+
+<!-- STEP 2: MAP -->
+<div class="step-label">02 — Choisis ta map</div>
+<div class="map-grid">
+  <div class="map-card" data-map="Ascent" onclick="selectMap('Ascent')">
+    <span class="map-icon">🏛️</span>
+    <div class="map-name">ASCENT</div>
+    <div class="map-region">Venise · IT</div>
+  </div>
+  <div class="map-card" data-map="Pearl" onclick="selectMap('Pearl')">
+    <span class="map-icon">🐚</span>
+    <div class="map-name">PEARL</div>
+    <div class="map-region">Sous-marin</div>
+  </div>
+  <div class="map-card" data-map="Haven" onclick="selectMap('Haven')">
+    <span class="map-icon">⛩️</span>
+    <div class="map-name">HAVEN</div>
+    <div class="map-region">Thimphu · BT</div>
+  </div>
+  <div class="map-card" data-map="Breeze" onclick="selectMap('Breeze')">
+    <span class="map-icon">🏝️</span>
+    <div class="map-name">BREEZE</div>
+    <div class="map-region">Bermudes</div>
+  </div>
+  <div class="map-card" data-map="Bind" onclick="selectMap('Bind')">
+    <span class="map-icon">🕌</span>
+    <div class="map-name">BIND</div>
+    <div class="map-region">Marrakech · MA</div>
+  </div>
+</div>
+
+<!-- STEP 3: SIDE -->
+<div class="step-label" style="text-align:center">03 — Attaque ou défense ?</div>
+<div class="side-toggle">
+  <button class="side-btn active-atk" id="btn-atk" onclick="selectSide('attack')">⚔️ ATTAQUE</button>
+  <button class="side-btn" id="btn-def" onclick="selectSide('defense')">🛡️ DÉFENSE</button>
+</div>
+
+<div class="divider"></div>
+
+<!-- LINEUPS AREA -->
+<div id="lineups-area" class="lineups-area">
+  <div class="lineups-header">
+    <div class="lineups-title" id="lineups-title">—</div>
+    <div class="lineups-badge" id="lineups-badge"></div>
+  </div>
+  <div class="lineup-grid" id="lineup-grid"></div>
+</div>
+
+<div id="empty-state" class="empty-state">
+  <span class="empty-icon">🎯</span>
+  <div class="empty-title">Sélectionne un agent et une map</div>
+  <div class="empty-sub">Choisis ton agent, ta map et ton camp pour voir les meilleurs lineups.</div>
+</div>
+
+</div>
+<script>
+let selAgent = null, selMap = null, selSide = 'attack';
+
+const DATA = {
+  Clove: {
+    Ascent: {
+      attack: [
+        { name:'A Site — smokes Heaven + CT', ability:'smoke', abClass:'ab-smoke', steps:['Position-toi en A Main, derrière le coin gauche avant d\'entrer.','Lance ta 1ère smoke sur A Heaven (le balcon haut) pour aveugler les defenders.','Lance ta 2ème smoke sur A CT (la sortie CT vers le site).','Push immédiatement pendant que tes coéquipiers entrent par A Short.'], tip:'<strong>Conseil :</strong> Smoke Heaven en priorité — c\'est de là que vient 80% des kills sur A Site en push.' },
+        { name:'B Site — smokes Market + CT', ability:'smoke', abClass:'ab-smoke', steps:['Avance en B Main jusqu\'au coin du mur avant les portes.','Smoke B Market (la fenêtre à gauche de l\'entrée B).','Smoke B CT pour couper le retrait des défenseurs.','Tes coéquipiers peuvent rush B pendant que tu gardes B Back avec ton Meddle.'], tip:'<strong>Conseil :</strong> Si tu sens un Operator en B Main, utilise ton Meddle sur Market avant de smoker.' },
+        { name:'Mid — contrôle du marché', ability:'smoke', abClass:'ab-smoke', steps:['Reste en spawn, avance vers Mid Catwalk.','Smoke Mid Top (la sortie vers Market depuis leur spawn).','Smoke Market Door pour couper les rotations CT.','Ton équipe peut traverser Mid et aller A ou B selon le read.'], tip:'<strong>Conseil :</strong> Le contrôle du Mid sur Ascent est énorme. Cette smoke bloque toutes les rotations rapides.' },
+        { name:'Post-plant — Meddle sur default', ability:'decay', abClass:'ab-smoke', steps:['Après le plant sur A Site default (derrière les caisses), recule en A Main.','Lance ton Meddle sur la zone du spike pour décayer les défenseurs qui approchent.','Les ennemis qui traversent ton Meddle perdent 30 HP et sont ralentis.','Smoke A CT en même temps pour bloquer les angles de peek.'], tip:'<strong>Conseil :</strong> Meddle + smoke = défuse quasi impossible pour l\'ennemi. Garde cette combo pour le post-plant.' }
+      ],
+      defense: [
+        { name:'A Site — hold Heaven + contrôle', ability:'smoke', abClass:'ab-smoke', steps:['Joue en A Heaven avec ton arme.','Si tu entends un rush A Main, smoke A Short pour bloquer les renforts.','Smoke A Link pour bloquer une rotation rapide de leur CT.','Utilise ton Meddle sur A Main pour décayer les ennemis qui pushent.'], tip:'<strong>Conseil :</strong> En défense sur A Ascent, Heaven est la position reine. La smoke A Short coupe complètement leur attack.' },
+        { name:'B Site — retake avec smokes', ability:'smoke', abClass:'ab-smoke', steps:['Si le site tombe, reste en CT ou Market.','Smoke B Site back pour couvrir leur plant.','Smoke B Entrance pour te donner le temps de retake sans te faire one-shot.','Utilise Not Dead Yet (ulti) si tu meurs pendant le retake — respawn sur le spike.'], tip:'<strong>Conseil :</strong> Clove est le meilleur agent pour le retake car son ulti te permet de revivre pendant un retake actif.' }
+      ]
+    },
+    Pearl: {
+      attack: [
+        { name:'A Site — smokes A Link + Flowers', ability:'smoke', abClass:'ab-smoke', steps:['Positionne-toi en A Main avant d\'entrer sur le site.','Smoke A Link (le couloir à droite du site) pour bloquer les rotations.','Smoke A Flowers (gauche du site) pour couper les angles des défenseurs.','Avance avec ton équipe dès que les smokes sont posées.'], tip:'<strong>Conseil :</strong> Sur Pearl A Site, smoker A Link est prioritaire — c\'est la rotation la plus rapide des défenseurs.' },
+        { name:'B Site — smokes B Hall + Tower', ability:'smoke', abClass:'ab-smoke', steps:['Depuis B Main, prépare deux smokes.','Smoke B Hall (le passage court vers B depuis leur spawn).','Smoke B Tower (la position haute à droite du site).','Ces deux smokes coupent tous les angles de peek dangereux pour entrer sur B.'], tip:'<strong>Conseil :</strong> B Tower est un spot Operator classique. Smoke-le systématiquement avant d\'entrer en B.' },
+        { name:'Mid — Meddle sur Mid Doors', ability:'decay', abClass:'ab-smoke', steps:['Avance jusqu\'à A Art ou Mid Plaza selon la rotation.','Lance ton Meddle sur Mid Doors pour décayer les ennemis qui tiennent Mid.','Tes coéquipiers peuvent profiter du Meddle pour traverser sans prendre de dégâts critiques.','Smoke ensuite Mid Top pour bloquer leur vue sur toute la zone.'], tip:'<strong>Conseil :</strong> Mid Pearl est très disputé. Le Meddle sur Doors force les ennemis à sortir de leur position.' }
+      ],
+      defense: [
+        { name:'A Site — hold A Secret', ability:'smoke', abClass:'ab-smoke', steps:['Joue près de A Secret ou A Back Site.','Si A Main push, smoke l\'entrée A Main pour gagner du temps.','Smoke A Ramp (accès depuis Mid) pour bloquer un flanc.','Tombe back CT et attends ton équipe pour retake si besoin.'], tip:'<strong>Conseil :</strong> Sur Pearl défense, évite les plays agressifs. Joue info + smoke sur les rotations.' },
+        { name:'B Site — smoke B Tunnel', ability:'smoke', abClass:'ab-smoke', steps:['Joue en B Back ou B Tower.','Si B push, smoke B Main entry pour ralentir l\'entrée.','Smoke B Short (accès par les escaliers) pour bloquer les flank rapides.','Utilise Meddle sur le spike en post-plant pour décayer les défuseurs.'], tip:'<strong>Conseil :</strong> Le Meddle post-plant est une des meilleures utilisations de Clove en défense.' }
+      ]
+    },
+    Haven: {
+      attack: [
+        { name:'A Site — smoke A Box + Goose', ability:'smoke', abClass:'ab-smoke', steps:['Avance en A Long ou A Short selon la situation.','Smoke A Box (la grande boîte en bois sur le site) pour bloquer le hold principal.','Smoke Goose (le bâtiment arrière droit du site) pour couper le CT.','Push en coordination avec l\'équipe sur les deux accès.'], tip:'<strong>Conseil :</strong> Sur A Site Haven, la smoke Goose est indispensable — les défenseurs adorent jouer cet angle.' },
+        { name:'B Site — smoke Window + Short', ability:'smoke', abClass:'ab-smoke', steps:['Approche B depuis Mid ou B Main.','Smoke B Window (la fenêtre à gauche de l\'entrée B) — spot Operator classique.','Smoke B Short (sortie droite vers le site) pour bloquer les crossfires.','Coordonne avec un flash pour entrer proprement sur B.'], tip:'<strong>Conseil :</strong> B Site Haven est le plus facile à prendre avec Clove. Smoke Window systématiquement.' },
+        { name:'C Site — contrôle C Long', ability:'smoke', abClass:'ab-smoke', steps:['C est le site le plus ouvert de Haven.','Smoke C Long (le long couloir d\'accès CT) pour bloquer les snipes.','Smoke C Cross pour couper les angles latéraux.','Avance immédiatement après les smokes — C Site se reprend vite si tu traînes.'], tip:'<strong>Conseil :</strong> Le C Long sur Haven est dangereux sans smoke. Priorité numéro 1 avant d\'entrer.' }
+      ],
+      defense: [
+        { name:'Triple sites — gestion des rotations', ability:'smoke', abClass:'ab-smoke', steps:['Haven a 3 sites — ton rôle est de gérer les rotations avec tes smokes.','Si A push, smoke A Short pour ralentir pendant que tu tournes.','Si C push, smoke C Long pour couper leur advance vers B.','Garde ton Meddle pour le post-plant sur le site qui tombe.'], tip:'<strong>Conseil :</strong> Sur Haven défense, Clove est essentiel pour ralentir les rotations entre les 3 sites.' }
+      ]
+    },
+    Breeze: {
+      attack: [
+        { name:'A Site — smoke A Cave + Hall', ability:'smoke', abClass:'ab-smoke', steps:['Breeze est une map ouverte — les smokes sont cruciales.','Smoke A Cave (la sortie de grotte sur le site) pour bloquer les angles profonds.','Smoke A Hall pour couper le retrait vers leur spawn.','Avance vite — les smokes Clove ne durent pas éternellement.'], tip:'<strong>Conseil :</strong> Breeze est ta meilleure map selon tes stats (2 parties, bon KD). Apprends bien les smokes ici.' },
+        { name:'B Site — smoke B Tower + Tunnel', ability:'smoke', abClass:'ab-smoke', steps:['B Tower sur Breeze est le spot le plus fort pour les défenseurs.','Smoke B Tower immédiatement à l\'entrée de B Main.','Smoke B Tunnel (couloir gauche d\'accès B) pour couper les flank.','Tes coéquipiers peuvent push B directement sous couvert.'], tip:'<strong>Conseil :</strong> B Tower sans smoke = une mort garantie en B push. C\'est la smoke la plus importante sur Breeze.' }
+      ],
+      defense: [
+        { name:'Mid — contrôle avec smokes', ability:'smoke', abClass:'ab-smoke', steps:['Mid Breeze est très large et ouvert.','Smoke Mid pour te donner le temps de repositionner selon l\'info.','Utilise ton Meddle sur Mid Choke pour décayer les avances ennemies.','Recule toujours vers le site le plus proche et attends tes coéquipiers.'], tip:'<strong>Conseil :</strong> Ne joue jamais Mid Breeze sans info. Smoke + info = retake facile pour ton équipe.' }
+      ]
+    },
+    Bind: {
+      attack: [
+        { name:'A Site — smoke A Short + Lamps', ability:'smoke', abClass:'ab-smoke', steps:['Avance par A Short ou les téléporteurs.','Smoke A Lamps (les lampadaires au fond du site) pour bloquer le hold principal.','Smoke A Short (sortie vers la salle courte) pour couper les angles.','Push immédiatement — Bind se gagne souvent à l\'info rapide.'], tip:'<strong>Conseil :</strong> Les téléporteurs de Bind permettent des smokes très créatives. Expérimente avec des angles inattendus.' },
+        { name:'B Site — smoke Elbow + CT', ability:'smoke', abClass:'ab-smoke', steps:['B Site Bind est plus petit et fermé.','Smoke B Elbow (le coude d\'angle à l\'entrée B) — hold classique des défenseurs.','Smoke B CT pour bloquer le retrait vers leur spawn.','Avance avec ton équipe par B Main ou par le téléporteur.'], tip:'<strong>Conseil :</strong> L\'Elbow sur B Bind est un des spots les plus tués du jeu. Smoke systématiquement.' }
+      ],
+      defense: [
+        { name:'Flank depuis téléporteur', ability:'smoke', abClass:'ab-smoke', steps:['Utilise les téléporteurs pour des positions inattendues.','Si A push, smoke A Short et utilise le téléporteur pour arriver derrière eux.','Si B push, smoke B Main et contourne par le téléporteur B→A.','Ton Meddle sur le spike en retake est très efficace sur les petits sites de Bind.'], tip:'<strong>Conseil :</strong> Bind est la map où Clove brille le plus en défense grâce aux téléporteurs pour les smokes surprises.' }
+      ]
+    }
+  },
+
+  Sova: {
+    Ascent: {
+      attack: [
+        { name:'B Site — recon bolt depuis B Main', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi à l\'extrême gauche de l\'entrée B Main.','Vise l\'œil de la girafe peinte sur le mur au-dessus de la zone Market.','Lance le bolt avec une barre de charge complète, sans rebond.','Le dart scanne Market, la porte du switch, et les deux lignes d\'entrée B.'], tip:'<strong>C\'est le lineup le plus utile sur Ascent.</strong> Il scanne 70% des positions défensives B en un dart.' },
+        { name:'A Site — recon depuis A Main', ability:'recon', abClass:'ab-recon', steps:['Tiens-toi à l\'extrême gauche de A Main avant d\'entrer.','Vise le coin en haut du mur qui donne sur le site.','1 rebond, 1.5 barres de charge.','Le dart atterrit sur A Site et scanne : Heaven, le site, et A Link.'], tip:'<strong>Conseil :</strong> Lance ce dart avant chaque push A. L\'info que tu donnes à ton équipe vaut plus que le dart en tant que tel.' },
+        { name:'Mid — shock bolt sur Catwalk', ability:'shock', abClass:'ab-shock', steps:['Depuis spawn, vise le bord du toit au-dessus de Catwalk.','2 rebonds, 1 barre de charge.','Le shock bolt atterrit sur Catwalk Mid et blesse quiconque essaie de prendre position.','Idéal pour décourager les pushes agressifs Mid en début de round.'], tip:'<strong>Conseil :</strong> Ce shock bolt peut donner des kills gratuits si l\'ennemi rushe Mid. Lance-le dès le début du round.' },
+        { name:'Post-plant A — shock sur default', ability:'shock', abClass:'ab-shock', steps:['Après le plant A Site default, recule en A Main.','Vise le coin de l\'immeuble à droite en regardant le site.','1 rebond, 2 barres de charge.','Le dart atterrit sur la zone default et blesse quiconque essaie de défuser.'], tip:'<strong>Conseil :</strong> Combine ce shock bolt avec une smoke Clove sur la zone pour rendre la défuse quasi impossible.' }
+      ],
+      defense: [
+        { name:'B Site — info dart depuis CT', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en CT B (derrière le site, côté spawn défenseur).','Vise le bord de la fenêtre au-dessus de B Main.','2 rebonds, 2 barres de charge.','Scanne tout B Lobby et l\'entrée de B Main avant que les ennemis arrivent sur le site.'], tip:'<strong>Conseil :</strong> Lance ce dart en début de round pour obtenir de l\'info précoce sur un B rush.' },
+        { name:'A Site — info depuis A Heaven', ability:'recon', abClass:'ab-recon', steps:['Monte en A Heaven (le balcon supérieur de A Site).','Colle-toi au coin derrière la grande caisse.','Aligne 2 barres, 2 rebonds, vise la porte A Short en hauteur.','Le dart scanne A Short et A Main pour détecter un rush A.'], tip:'<strong>Conseil :</strong> Cette position en Heaven te permet de lancer le dart et de garder un angle de peek simultanément.' },
+        { name:'Mid — recon vers Market', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en CT et regarde vers Mid.','Vise l\'horloge entre les deux bords de la tour du marché.','1 barre de charge, sans rebond.','Le dart scanne les rotations Mid → Market pour te donner de l\'info sur les rotations.'], tip:'<strong>Conseil :</strong> Très utile en mi-round pour voir si l\'ennemi tente une rotation par Mid.' }
+      ]
+    },
+    Pearl: {
+      attack: [
+        { name:'A Site — recon depuis A Main', ability:'recon', abClass:'ab-recon', steps:['Monte sur le petit muret au début de A Main.','Vise le coin du mur en haut à gauche donnant sur le site.','Tire avec 1 rebond, 1 barre de puissance.','Le dart scanne A Site entier et révèle les défenseurs sur le site.'], tip:'<strong>Conseil :</strong> Ce lineup révèle A Site + A Link simultanément. Lance-le avant chaque push A sur Pearl.' },
+        { name:'B Site — recon sur B Link', ability:'recon', abClass:'ab-recon', steps:['Avance jusqu\'en B Main avant les portes doubles.','Vise le bord du mur au-dessus de B Link (le couloir central).','1 barre de charge, sans rebond.','Le dart atterrit sur B Link et révèle quiconque tient derrière les doubles portes.'], tip:'<strong>Conseil :</strong> B Link est souvent tenu agressivement. Ce dart permet d\'anticiper un peek early.' },
+        { name:'Art Room — info depuis Mid', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en Mid Plaza.','Regarde le trou dans le mur qui donne sur Art Room.','Vise l\'image de la cloche sur le plafond d\'Art Room.','Sans rebond, demi-barre de charge — dart ultra rapide vers Art Room.'], tip:'<strong>Conseil :</strong> Art Room est souvent tenu car il donne sur deux angles. Ce dart est facile à retenir et très utile.' }
+      ],
+      defense: [
+        { name:'A Site — info sur A Main early', ability:'recon', abClass:'ab-recon', steps:['Dès le début du round, positionne-toi en A Back.','Vise la fissure dans le mur en A Main (angle précis, pratique en custom).','Tire sans rebond, pleine barre de charge.','Le dart scanne A Main et révèle un rush A avant qu\'ils arrivent sur le site.'], tip:'<strong>Conseil :</strong> Ce dart donne de l\'info gratuitement sans exposer ta position. Idéal pour le début de round.' },
+        { name:'B Site — info B Main', ability:'recon', abClass:'ab-recon', steps:['Tiens-toi en B Site Back.','Tire le dart dans le couloir B Hall/B Main.','1 barre de charge, vise le bord supérieur du couloir.','Révèle tout B Main et les positions aggressives de l\'ennemi.'], tip:'<strong>Conseil :</strong> Sur Pearl défense, l\'info est tout. Ces darts te permettent de jouer safe et d\'avoir l\'info sans exposer ta vie.' }
+      ]
+    },
+    Haven: {
+      attack: [
+        { name:'A Lobby — scan depuis A Long', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en A Long au coin gauche.','Aligne la barre blanche de ton HUD avec la ligne du mur devant toi.','1 barre de charge, sans rebond.','Scanne A Lobby et révèle les défenseurs qui hold A Long early.'], tip:'<strong>Conseil :</strong> Haven a 3 sites et les défenseurs doivent couvrir énormément. L\'info sur A Long vaut de l\'or.' },
+        { name:'B Site — scan depuis A Garden', ability:'recon', abClass:'ab-recon', steps:['Monte en A Garden (le petit jardin côté A).','Positionne-toi près du vase en céramique sur le rebord surélevé.','Vise la pointe de la structure couvrant B Site.','2 rebonds, 2 barres — scanne l\'arrière de B Site.'], tip:'<strong>Conseil :</strong> Ce dart informe sur B depuis A Garden, parfaite pour les splits A+B.' },
+        { name:'C Long — info dart', ability:'recon', abClass:'ab-recon', steps:['Depuis C Site, mets-toi en C Back près de C Link.','Sans rebond, 2 barres de charge.','Le dart atterrit sur un arbre au-dessus de C Long.','Révèle les défenseurs tenant C Long ou C Cross.'], tip:'<strong>Conseil :</strong> C Long sur Haven est un couloir mortel. Scanne toujours avant de push pour éviter les surprises.' }
+      ],
+      defense: [
+        { name:'B Tree — info dart', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en B Site, côté défenseur.','Vise la petite feuille sur B Tree (l\'arbre au fond de B Long).','Sans rebond, 1.5 barres de charge.','Le dart atterrit sur B Tree et scanne B Long + l\'entrée underground.'], tip:'<strong>Conseil :</strong> B Tree sur Haven est le dart défensif le plus efficace. Il couvre 2 approches simultanément.' }
+      ]
+    },
+    Breeze: {
+      attack: [
+        { name:'A Site — scan Hall + Cave', ability:'recon', abClass:'ab-recon', steps:['Approche par A Hall avec ton équipe.','Lance le dart en hauteur vers A Cave depuis l\'extérieur.','1 rebond, 2 barres de charge.','Scanne A Cave et les angles derrière les caisses sur A Site.'], tip:'<strong>Conseil :</strong> Breeze a beaucoup d\'espace. Les darts Sova sont essentiels pour ne pas marcher sur des défenseurs cachés.' },
+        { name:'B Site — scan B Tower', ability:'recon', abClass:'ab-recon', steps:['Depuis B Main, lance le dart vers B Tower (la structure haute).','1 rebond, pleine charge.','Scanne B Tower et B Back Site simultanément.','Info cruciale avant de push le site.'], tip:'<strong>Conseil :</strong> B Tower Breeze est le spot Operator le plus dangereux de la map. Scan obligatoire.' }
+      ],
+      defense: [
+        { name:'Mid — info depuis CT', ability:'recon', abClass:'ab-recon', steps:['Positionne-toi en Mid CT (centre de la map).','Lance le dart vers Mid pour scanner les avances ennemies.','2 barres, 1 rebond.','Révèle les flancs potentiels et les groupes en Mid.'], tip:'<strong>Conseil :</strong> Breeze en défense se gagne avec l\'info. Sova est excellent sur cette map pour ça.' }
+      ]
+    },
+    Bind: {
+      attack: [
+        { name:'A Site — scan A Lamps depuis Showers', ability:'recon', abClass:'ab-recon', steps:['Avance dans Showers (couloir gauche vers A).','Lance le dart vers A Site en visant le toit.','1 rebond, 2 barres de charge.','Scanne A Site + A Short et révèle les défenseurs sur le site.'], tip:'<strong>Conseil :</strong> Showers sur Bind est un angle dangereux. Ce dart te permet de scan sans exposer ta vie.' },
+        { name:'B Site — scan depuis B Long', ability:'recon', abClass:'ab-recon', steps:['Avance en B Long (couloir principal vers B).','Lance le dart en hauteur vers B Site.','Sans rebond, pleine charge.','Révèle les positions sur B Site, B Elbow et B Short.'], tip:'<strong>Conseil :</strong> B Bind a beaucoup de spots. Ce dart révèle 3 zones en même temps.' }
+      ],
+      defense: [
+        { name:'Téléporteur — info sur flanc', ability:'recon', abClass:'ab-recon', steps:['Lance le dart dans le couloir du téléporteur pour voir si quelqu\'un l\'utilise.','Très utile en début de round pour détecter les flancs rapides.','1 barre de charge, sans rebond.','Si le dart scanne un ennemi dans le teleporter, ton équipe peut le piéger.'], tip:'<strong>Conseil :</strong> Les téléporteurs de Bind sont souvent utilisés pour flanker. Un dart early te donne l\'info gratuitement.' }
+      ]
+    }
+  },
+
+  Raze: {
+    Ascent: {
+      attack: [
+        { name:'A Site — double satchel Heaven', ability:'blast', abClass:'ab-blast', steps:['Positionne-toi en A Short (l\'accès court vers A Site).','Lance ton 1er Blast Pack vers le sol devant toi.','Saute, détone le 1er pack pour prendre de la hauteur.','En l\'air, lance le 2ème vers le mur de Heaven et détone pour atterrir sur A Heaven — angle surprise total.'], tip:'<strong>Conseil :</strong> Arriver sur A Heaven avec le double satchel est l\'un des plays les plus forts sur Ascent. Les défenseurs ne s\'y attendent pas.' },
+        { name:'B Site — Boom Bot clear Market', ability:'boom', abClass:'ab-boom', steps:['Depuis B Main, vise le coin du mur à gauche.','Lance ton Boom Bot vers Market — il va bouncer et clearer les angles.','Le bot révèle ET endommage quiconque est dans Market.','Avance sur le site pendant que le bot fait son travail.'], tip:'<strong>Conseil :</strong> Le Boom Bot sur Market est un des lineups les plus efficaces du jeu. Le bot clear un spot dangereux sans que tu t\'exposes.' },
+        { name:'Mid — Paint Shell sur Catwalk', ability:'paint', abClass:'ab-paint', steps:['Depuis A Main ou les spawn, lance tes Paint Shells vers Mid Catwalk.','Vise pour que l\'explosion principale touche le sol de Catwalk.','L\'explosion secondaire bouncea et couvre toute la zone.','Idéal pour bloquer un push agressif Mid en début de round.'], tip:'<strong>Conseil :</strong> Les Paint Shells sont excellentes pour le spam de positions sans exposer ta tête. Entraîne-toi à viser le bon angle.' },
+        { name:'Satchel — accès B depuis CT', ability:'blast', abClass:'ab-blast', steps:['Depuis CT, utilise le double satchel pour passer B Catwalk rapidement.','1er pack sur le sol, jump + détone.','2ème pack en l\'air vers la plateforme B Back.','Tu arrives sur B Back avec l\'élément de surprise total.'], tip:'<strong>Conseil :</strong> Cette trajectoire est inattendue. Les défenseurs regardent B Main — toi tu arrives de derrière.' }
+      ],
+      defense: [
+        { name:'A Site — repositionnement satchel', ability:'blast', abClass:'ab-blast', steps:['Si les ennemis pushent A, n\'essaie pas de les combattre frontalement.','Utilise tes satchels pour te repositionner rapidement vers CT.','1er pack vers CT Door, saute + détone.','Tu peux aussi aller sur A Heaven pour un angle surprise sur eux qui rentrent sur le site.'], tip:'<strong>Conseil :</strong> Raze en défense n\'est pas là pour tenir — elle est là pour sauvegarder sa vie et créer des trades.' },
+        { name:'B — Paint Shell sur B Main entry', ability:'paint', abClass:'ab-paint', steps:['Depuis B Site, lance tes grenades vers l\'entrée de B Main.','Chronologie : lance les grenades à la vue du push, pas après.','L\'explosion fait des dégâts ET reveal les ennemis s\'ils sont proches.','Recule après — ne reste pas à découvert.'], tip:'<strong>Conseil :</strong> Ce lineup est parfait pour les eco rounds — blesser plusieurs ennemis à la fois peut changer le rapport de force.' }
+      ]
+    },
+    Pearl: {
+      attack: [
+        { name:'A Site — Boom Bot depuis A Main', ability:'boom', abClass:'ab-boom', steps:['Avant d\'entrer sur A, lance ton Boom Bot depuis A Main.','Vise le point le plus bas du câble sur le mur (voir image mentale : câble électrique à mi-hauteur).','Le bot va bouncer autour des caisses et clearer A Art + les angles cachés.','Avance sur le site pendant que le bot travaille.'], tip:'<strong>Conseil :</strong> Ce bot crée de l\'espace sans que tu t\'exposes. C\'est le lineup Raze le plus efficace sur Pearl A.' },
+        { name:'B Site — double satchel sur B Screens', ability:'blast', abClass:'ab-blast', steps:['Depuis B Main, utilise le double satchel pour monter sur B Screens (la plateforme haute).','1er pack vers le mur latéral.','Saute + détone, puis 2ème pack en l\'air pour atterrir en hauteur.','Depuis B Screens tu domines tout B Site avec ton Showstopper si besoin.'], tip:'<strong>Conseil :</strong> La hauteur sur B Screens Pearl est un avantage massif. Entraîne-toi à ce satchel jump — il change les games.' },
+        { name:'B Tower — Paint Shell pour push Operator', ability:'paint', abClass:'ab-paint', steps:['Lance tes Paint Shells vers B Tower avant d\'entrer.','Vise pour que l\'explosion principale touche B Tower (la position haute).','L\'Operator player est forcé de bouger — ton équipe peut push.','Coordonne avec une smoke Clove sur B Tower pour maximiser l\'effet.'], tip:'<strong>Conseil :</strong> B Tower Pearl est le cauchemar de tout attaquant. Paint Shells + smoke = site gratuit.' }
+      ],
+      defense: [
+        { name:'A Main — Boom Bot early info', ability:'boom', abClass:'ab-boom', steps:['En début de round, lance ton Boom Bot dans A Main depuis A Restaurant.','Vise le point sur le mur indiqué par la fin de la phrase peinte sur le mur.','Le bot va bouncer dans A Main et révéler un rush A early.','Si le bot lock-on, tu sais qu\'ils pushent A — avertis ton équipe.'], tip:'<strong>Conseil :</strong> Ce Boom Bot early te donne de l\'info gratuite sur un rush A sans exposer ta vie.' },
+        { name:'Mid — Paint Shell pour bloquer Mid Push', ability:'paint', abClass:'ab-paint', steps:['Lance les Paint Shells sur Mid Double Doors en début de round.','Ça dissuade les ennemis de prendre Mid early.','Si tu entends qu\'ils arrivent quand même, les grenades vont les blesser.','Recule ensuite et garde tes satchels pour l\'escape.'], tip:'<strong>Conseil :</strong> Mid Pearl peut dominer le jeu. Cette utilisation de Raze ralentit les prises de Mid et force l\'ennemi à jouer différemment.' }
+      ]
+    },
+    Haven: {
+      attack: [
+        { name:'A Site — satchel jump sur A Short', ability:'blast', abClass:'ab-blast', steps:['Approche par A Long ou par Mid.','Utilise le satchel pour sauter par-dessus le mur de A Short.','Tu arrives sur A Site directement depuis A Short sans passer la porte.','Angle surprise total — les défenseurs regardent la porte, pas le mur.'], tip:'<strong>Conseil :</strong> Ce jump est très fort sur Haven. La plupart des défenseurs A ne s\'attendent pas à un peak par-dessus le mur.' },
+        { name:'C Site — Boom Bot clear C Long', ability:'boom', abClass:'ab-boom', steps:['Avant de push C Long, lance ton Boom Bot dans le couloir.','Le bot va avancer dans C Long et révéler tous les défenseurs qui tiennent le couloir.','Avance derrière le bot pour prendre des duels avec l\'info.','Si C Long est vide, le bot va sur C Site et clear les angles.'], tip:'<strong>Conseil :</strong> C Long Haven est mortel sans info. Le Boom Bot te donne l\'info ET fait des dégâts en même temps.' }
+      ],
+      defense: [
+        { name:'B Site — repositionnement rapide', ability:'blast', abClass:'ab-blast', steps:['Haven a 3 sites — Raze doit bouger vite entre eux.','Utilise le double satchel pour traverser Mid rapidement si B est attacké.','1er pack vers le sol, saute + détone, 2ème pack pour accélérer.','Tu peux traverser Mid Haven en 2 secondes avec le double satchel — assiste le retake.'], tip:'<strong>Conseil :</strong> La mobilité de Raze sur Haven est son super-pouvoir en défense. Entraîne-toi à traverser Mid rapidement.' }
+      ]
+    },
+    Breeze: {
+      attack: [
+        { name:'B Site — satchel vers B Tower', ability:'blast', abClass:'ab-blast', steps:['B Tower Breeze est la position la plus forte du site.','Utilise le double satchel depuis B Main pour monter sur B Tower.','1er pack vers le coin du pilier, saute + détone.','2ème pack en l\'air pour atteindre la hauteur de B Tower.'], tip:'<strong>Conseil :</strong> Si tu contrôles B Tower Breeze en attaque, tu contrôles le round. Ce satchel jump est la clé.' },
+        { name:'A Site — Paint Shells sur A Cave', ability:'paint', abClass:'ab-paint', steps:['Avant d\'entrer par A Hall, lance tes grenades vers A Cave.','L\'explosion principale touche l\'entrée de A Cave.','L\'explosion secondaire couvre les angles de A Site back.','Avance avec l\'équipe pendant que les défenseurs reculent.'], tip:'<strong>Conseil :</strong> A Cave Breeze est un spot difficile à clear sans util. Les Paint Shells font le travail à distance.' }
+      ],
+      defense: [
+        { name:'Mid — bloquer avec Paint Shells', ability:'paint', abClass:'ab-paint', steps:['Mid Breeze est une zone ouverte et dangereuse.','Lance tes grenades sur l\'entrée Mid depuis ta position défensive.','Blesser les ennemis qui tentent de prendre Mid early ralentit leur game plan.','Garde tes satchels pour escape si Mid tombe.'], tip:'<strong>Conseil :</strong> Raze sur Breeze défense doit être mobile. Ne reste jamais statique — utilise tes satchels pour t\'adapter.' }
+      ]
+    },
+    Bind: {
+      attack: [
+        { name:'A Short — satchel jump sur Lamps', ability:'blast', abClass:'ab-blast', steps:['Approche par A Short vers le site.','Utilise un satchel pour sauter sur les Lamps (la structure haute A Site).','Depuis Lamps, tu domines tout A Site avec des angles très difficiles à contre.','Lance une Paint Shell depuis Lamps pour clear les angles sous toi.'], tip:'<strong>Conseil :</strong> Les Lamps sur Bind sont une position qui change complètement les rounds. C\'est difficile à apprendre mais très fort.' },
+        { name:'B Site — Boom Bot dans Elbow', ability:'boom', abClass:'ab-boom', steps:['B Elbow Bind est un des spots les plus joués du jeu.','Lance ton Boom Bot dans l\'Elbow depuis B Long.','Le bot va bouncer dans le couloir et révéler quiconque tient l\'Elbow.','Avance sur le site avec l\'info — ou fuis si le bot confirm la présence.'], tip:'<strong>Conseil :</strong> L\'Elbow Bind tue des centaines de joueurs par jour. Ce Boom Bot rend le spot transparent.' }
+      ],
+      defense: [
+        { name:'Téléporteur — surprise Paint Shells', ability:'paint', abClass:'ab-paint', steps:['Prends le téléporteur pour aller sur le côté opposé rapidement.','Une fois de l\'autre côté, lance tes grenades sur leur zone de push.','Angle inattendu — les ennemis ne savent pas que tu es là.','Garde un satchel pour l\'escape si le play ne passe pas.'], tip:'<strong>Conseil :</strong> Les téléporteurs sur Bind permettent des plays très créatifs avec Raze. Les grenades depuis l\'autre côté surprennent toujours.' }
+      ]
+    }
+  },
+
+  Harbor: {
+    Ascent: {
+      attack: [
+        { name:'A Site — High Tide couvrant Heaven + Door', ability:'wall', abClass:'ab-wall', steps:['Avance jusqu\'en A Short.','Active High Tide (E) et maintiens le clic gauche pour courber le mur.','Dirige le mur pour couvrir A Heaven (le balcon) ET A Door simultanément.','Ton équipe peut push sous le mur — les ennemis en Heaven ne peuvent plus voir.'], tip:'<strong>Conseil :</strong> Ce wall coupe les deux angles les plus dangereux de A Site. C\'est le lineup le plus important d\'Harbor sur Ascent.' },
+        { name:'B Site — Cascade pour traverser B Main', ability:'cascade', abClass:'ab-cascade', steps:['Active Cascade (C) depuis spawn.','Lance-la vers B Main pour créer un mur mobile qui avance.','Ton équipe se déplace derrière la vague — les défenseurs ne peuvent pas peek.','Une fois sur le site, complète avec le High Tide pour isoler CT.'], tip:'<strong>Conseil :</strong> La Cascade est parfaite pour les pushes en groupe. Elle se déplace avec vous et bloque les angles en temps réel.' },
+        { name:'Mid — High Tide vers Market', ability:'wall', abClass:'ab-wall', steps:['Positionne-toi en spawn côté A.','Lance High Tide vers Mid en courbe pour couvrir le passage Mid vers Market.','Le mur bloque les angles CT et Market door simultanément.','Tes coéquipiers peuvent traverser Mid en toute sécurité.'], tip:'<strong>Conseil :</strong> Le contrôle de Mid Ascent est crucial. Harbor peut le prendre seul grâce à ce wall.' },
+        { name:'Cove post-plant', ability:'cove', abClass:'ab-cove', steps:['Après le plant sur A Site ou B Site, lance ton Cove (Q) sur le spike.','Le bouclier d\'eau bloque les balles — personne ne peut tirer sur le spike.','Reste à côté pour défendre le Cove contre les destructions.','Si quelqu\'un essaie de défuser, shoot à travers le Cove — tu vois à travers.'], tip:'<strong>Conseil :</strong> Le Cove sur le spike en post-plant est l\'utilisation numéro 1 d\'Harbor. Garde toujours ton Q pour ce moment.' }
+      ],
+      defense: [
+        { name:'A Site — hold avec High Tide', ability:'wall', abClass:'ab-wall', steps:['Joue en A Site, côté défenseur.','Si tu entends un push A, active High Tide pour couvrir A Short.','Le mur empêche les ennemis d\'entrer proprement — ils doivent traverser le mur et se font ralentir.','Attends qu\'ils traversent pour les one-tap depuis le côté.'], tip:'<strong>Conseil :</strong> Les ennemis sont ralentis quand ils traversent High Tide. C\'est un avantage énorme pour toi en duel.' },
+        { name:'B Site — Cascade sur B Main push', ability:'cascade', abClass:'ab-cascade', steps:['Lance la Cascade vers B Main si tu entends un rush B.','La vague mobile ralentit leur push et donne du temps à tes coéquipiers de se repositionner.','Tu peux ensuite compléter avec le High Tide pour isoler une partie du site.','Utilise le Reckoning (ulti) sur la zone du spike si besoin.'], tip:'<strong>Conseil :</strong> La Cascade en défense créé du chaos dans les rushes — les ennemis sont ralentis et désorientés.' }
+      ]
+    },
+    Pearl: {
+      attack: [
+        { name:'A Site — High Tide sur A Link + Flowers', ability:'wall', abClass:'ab-wall', steps:['Positionne-toi en A Main avant le site.','Active High Tide et courbe le mur pour couvrir A Link (couloir à droite) et A Flowers (gauche).','Le mur crée une ligne qui bloque tous les angles de peek depuis le site.','Push avec ton équipe dès que le mur est en place.'], tip:'<strong>Conseil :</strong> Ce wall sur Pearl A Site est le plus complet du jeu pour Harbor. Il coupe 3 angles simultanément.' },
+        { name:'A Site — Cove sur A Secret', ability:'cove', abClass:'ab-cove', steps:['Lance ton Cove depuis A Main vers A Secret (l\'angle à l\'arrière du site).','Le bouclier bloque les tirs depuis A Secret et derrière la boîte centrale.','Tu peux accompagner ce Cove avec le High Tide pour une exécution complète.','Tes coéquipiers peuvent plant en toute sécurité derrière le Cove.'], tip:'<strong>Conseil :</strong> A Secret est un spot très tenu par les défenseurs sur Pearl. Le Cove le neutralise instantanément.' },
+        { name:'B Site — High Tide sur B Hall + Tower', ability:'wall', abClass:'ab-wall', steps:['Avant d\'entrer sur B, active High Tide depuis B Main.','Courbe le mur pour couvrir B Hall (court accès) et B Tower (position haute).','Ces deux spots couverts = B Site pratiquement accessible sans risque.','Push avec l\'équipe immédiatement après que le mur soit posé.'], tip:'<strong>Conseil :</strong> B Hall et B Tower sont les deux positions qui tuent les plus d\'attaquants sur Pearl B. Ce wall les neutralise les deux.' },
+        { name:'Mid — contrôle avec Cascade', ability:'cascade', abClass:'ab-cascade', steps:['Lance la Cascade vers Mid Double Doors.','La vague mobile avance et bloque la vue sur Mid Plaza.','Tes coéquipiers peuvent avancer en Mid sous couvert de la vague.','Complète avec High Tide si nécessaire pour une prise de Mid totale.'], tip:'<strong>Conseil :</strong> Pearl est une map où le Mid fait gagner les rounds. Harbor peut le prendre presque seul.' }
+      ],
+      defense: [
+        { name:'A Site — Cove sur A Main push', ability:'cove', abClass:'ab-cove', steps:['Lance le Cove dans l\'entrée de A Main pour bloquer un rush.','Le bouclier ralentit leur entrée et donne du temps à tes alliés de se repositionner.','Complète avec High Tide sur A Link pour bloquer les deux accès.','Idéal pour tenir A Site à 2 défenseurs.'], tip:'<strong>Conseil :</strong> Harbor en défense sur Pearl est excellent pour tenir deux accès à la fois. Cove + High Tide = site presque imprenable.' },
+        { name:'B Site — High Tide sur B Main', ability:'wall', abClass:'ab-wall', steps:['Si B push, active High Tide vers B Main.','Courbe le mur pour couvrir B Main ET B Short.','Les ennemis qui traversent sont ralentis — one-tap les depuis le côté.','Garde ton Cove pour le post-plant si le site tombe quand même.'], tip:'<strong>Conseil :</strong> Harbor est l\'agent de retake par excellence. Même si B tombe, ton kit permet de retake proprement.' }
+      ]
+    },
+    Haven: {
+      attack: [
+        { name:'A Site — High Tide sur A Box + Heaven', ability:'wall', abClass:'ab-wall', steps:['Avance par A Long ou A Short.','Active High Tide et courbe pour couvrir A Box (grande caisse) et A Heaven (le balcon Goose).','Le mur bloque les deux angles principaux du site.','Push avec l\'équipe — le site est pratiquement libre.'], tip:'<strong>Conseil :</strong> Haven A Site est l\'un des meilleurs sites pour Harbor. A Box et Goose sont couverts en un seul wall.' },
+        { name:'B Site — High Tide sur Window', ability:'wall', abClass:'ab-wall', steps:['B Window sur Haven est un spot Operator très dangereux.','Active High Tide depuis B Main et courbe vers B Window.','Le mur bloque B Window ET B Short entry.','Push B sous le couvert du mur — angle unique impossible à contre.'], tip:'<strong>Conseil :</strong> B Window Haven tue énormément de joueurs. Harbor est l\'un des seuls agents qui peut le neutraliser seul.' },
+        { name:'C Site — Cascade sur C Long', ability:'cascade', abClass:'ab-cascade', steps:['C Long est un couloir mortel sur Haven.','Lance la Cascade dans C Long depuis le début du couloir.','La vague avance et bloque les sightlines pendant que ton équipe push.','Complète avec le High Tide sur C Cross pour isoler les défenseurs sur C Site.'], tip:'<strong>Conseil :</strong> C Long Haven sans util = mort assurée. La Cascade est la meilleure solution pour push ce couloir.' }
+      ],
+      defense: [
+        { name:'3 sites — gestion avec High Tide', ability:'wall', abClass:'ab-wall', steps:['Haven a 3 sites — Harbor doit gérer les rotations.','Si A push, High Tide sur A Short pour ralentir pendant que tu tournes vers A.','Si C push, High Tide sur C Long pour bloquer pendant que les alliés rotatent.','Garde ton Cove pour le spike en post-plant.'], tip:'<strong>Conseil :</strong> Sur Haven défense, Harbor est le meilleur Controller pour gérer les 3 sites. Son wall se recharge — utilise-le souvent.' }
+      ]
+    },
+    Breeze: {
+      attack: [
+        { name:'A Site — High Tide couvrant A Hall + Cave', ability:'wall', abClass:'ab-wall', steps:['Breeze est une map énorme — Harbor a besoin d\'un wall de qualité.','Active High Tide et courbe-le pour couvrir A Hall ET A Cave.','Le mur doit bloquer les deux accès principaux du site.','Push avec l\'équipe — les défenseurs sont coupés en deux.'], tip:'<strong>Conseil :</strong> Breeze est une des meilleures maps pour Harbor (grosse ulti, grands sites). Apprends bien ce wall sur A.' },
+        { name:'B — Cove sur B Tunnel', ability:'cove', abClass:'ab-cove', steps:['Lance ton Cove dans B Tunnel (couloir d\'accès gauche vers B).','Le bouclier bloque les flancs rapides depuis B Tunnel.','Complète avec High Tide sur B Tower pour un push B complet.','Tes coéquipiers peuvent entrer sur B avec tous les angles couverts.'], tip:'<strong>Conseil :</strong> B Tunnel Breeze est souvent joué de façon aggressive par les défenseurs. Le Cove neutralise ce flanc.' }
+      ],
+      defense: [
+        { name:'Mid — Reckoning (ulti) sur push groupé', ability:'wall', abClass:'ab-wall', steps:['Si les ennemis pushent Mid Breeze en groupe, c\'est le moment de l\'ulti.','Lance le Reckoning sur la zone de Mid pour créer des geysers.','Les geysers frappent plusieurs ennemis et les reveal.','Tes coéquipiers peuvent nettoyer les ennemis blessés et révélés.'], tip:'<strong>Conseil :</strong> Le Reckoning Harbor sur Mid Breeze peut wipe une équipe entière qui se regroupe. Garde ton ulti pour ces moments.' }
+      ]
+    },
+    Bind: {
+      attack: [
+        { name:'A Site — High Tide sur Lamps + Short', ability:'wall', abClass:'ab-wall', steps:['A Bind a plusieurs angles difficiles à prendre.','Active High Tide et courbe pour couvrir A Lamps et A Short.','Le mur bloque les positions hautes et basses simultanément.','Push avec l\'équipe — sans angles, les défenseurs doivent bouger.'], tip:'<strong>Conseil :</strong> Harbor sur Bind est très fort car les couloirs étroits amplifient ses murs. A Lamps est neutralisé par ce wall.' },
+        { name:'B — Cove sur B Elbow', ability:'cove', abClass:'ab-cove', steps:['L\'Elbow B sur Bind est le spot le plus dangereux du site.','Lance ton Cove directement dans l\'Elbow depuis B Long.','Le bouclier neutralise complètement ce spot.','Tes coéquipiers peuvent entrer sur B sans s\'exposer à l\'Elbow.'], tip:'<strong>Conseil :</strong> Ce Cove dans B Elbow est probablement le lineup le plus impactant d\'Harbor sur Bind. Il neutralise seul le spot le plus fort du site.' }
+      ],
+      defense: [
+        { name:'Téléporteur — Cascade sur le flanc', ability:'cascade', abClass:'ab-cascade', steps:['Prends le téléporteur pour passer de l\'autre côté de la map.','Une fois de l\'autre côté, lance la Cascade sur leur zone de push.','La vague surprise depuis un angle inattendu crée de la confusion.','Complète avec le High Tide si besoin pour fermer le site.'], tip:'<strong>Conseil :</strong> Les téléporteurs + Cascade d\'Harbor sur Bind créent des plays très inattendus. C\'est difficile à contre.' }
+      ]
+    }
+  }
+};
+
+const MAPS_ALL = ['Ascent','Pearl','Haven','Breeze','Bind'];
+
+function selectAgent(agent) {
+  selAgent = agent;
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.agent-card[data-agent="${agent}"]`).classList.add('selected');
+  updateMapAvailability();
+  render();
+}
+
+function updateMapAvailability() {
+  if (!selAgent) return;
+  document.querySelectorAll('.map-card').forEach(c => {
+    const map = c.dataset.map;
+    const available = DATA[selAgent] && DATA[selAgent][map];
+    c.classList.toggle('disabled', !available);
+  });
+}
+
+function selectMap(map) {
+  if (!selAgent) { alert('Sélectionne d\'abord un agent !'); return; }
+  const available = DATA[selAgent] && DATA[selAgent][map];
+  if (!available) return;
+  selMap = map;
+  document.querySelectorAll('.map-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.map-card[data-map="${map}"]`).classList.add('selected');
+  render();
+}
+
+function selectSide(side) {
+  selSide = side;
+  document.getElementById('btn-atk').className = 'side-btn' + (side==='attack'?' active-atk':'');
+  document.getElementById('btn-def').className = 'side-btn' + (side==='defense'?' active-def':'');
+  render();
+}
+
+const ABILITY_LABELS = { smoke:'RUSE (smoke)', recon:'RECON BOLT', shock:'SHOCK DART', blast:'BLAST PACK', paint:'PAINT SHELLS', boom:'BOOM BOT', wall:'HIGH TIDE (mur)', cove:'COVE (bouclier)', cascade:'CASCADE (vague)' };
+
+function render() {
+  const area = document.getElementById('lineups-area');
+  const empty = document.getElementById('empty-state');
+  if (!selAgent || !selMap) { area.classList.remove('visible'); empty.style.display='block'; return; }
+  const lineups = DATA[selAgent]?.[selMap]?.[selSide];
+  if (!lineups || lineups.length === 0) {
+    area.classList.remove('visible');
+    empty.style.display='block';
+    empty.querySelector('.empty-title').textContent = 'Pas de lineup pour cette combinaison';
+    empty.querySelector('.empty-sub').textContent = `Aucun lineup ${selSide === 'attack' ? 'attaque' : 'défense'} disponible pour ${selAgent} sur ${selMap}.`;
+    return;
+  }
+  empty.style.display = 'none';
+  area.classList.add('visible');
+  const sideLabel = selSide === 'attack' ? 'ATTAQUE' : 'DÉFENSE';
+  const agentColor = { Clove: 'var(--clove)', Sova: 'var(--sova)', Raze: 'var(--raze)', Harbor: 'var(--harbor)' }[selAgent];
+  document.getElementById('lineups-title').innerHTML = `<span style="color:${agentColor}">${selAgent}</span> · ${selMap}`;
+  const badge = document.getElementById('lineups-badge');
+  badge.textContent = sideLabel;
+  badge.className = 'lineups-badge ' + (selSide === 'attack' ? 'badge-atk' : 'badge-def');
+  document.getElementById('lineup-grid').innerHTML = lineups.map((l, i) => `
+    <div class="lineup-card">
+      <div class="lineup-num">LINEUP ${String(i+1).padStart(2,'0')} / ${String(lineups.length).padStart(2,'0')}</div>
+      <div class="lineup-name">${l.name}</div>
+      <div class="lineup-ability ${l.abClass}">${ABILITY_LABELS[l.ability] || l.ability}</div>
+      <ul class="lineup-steps">
+        ${l.steps.map((s,j)=>`<li><div class="step-num">${j+1}</div><span>${s}</span></li>`).join('')}
+      </ul>
+      <div class="lineup-tip">${l.tip}</div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
