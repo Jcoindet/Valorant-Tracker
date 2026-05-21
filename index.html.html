@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAAZWAAL · VALO TRACKER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --bg: #080a0f;
+  --bg2: #0d1018;
+  --bg3: #12161f;
+  --bg4: #181d28;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --accent: #ff4655;
+  --accent2: #7b61ff;
+  --green: #4ade80;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --text: #f0f2f8;
+  --text2: #8892a4;
+  --text3: #4a5568;
+  --font-head: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ACCENT LINE TOP */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), transparent);
+  z-index: 100;
+}
+
+.app { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* ── HEADER ── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--accent);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex; align-items: center; justify-content: center;
+  animation: pulse-logo 3s ease-in-out infinite;
+}
+
+@keyframes pulse-logo {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(255,70,85,0.4)); }
+  50% { filter: drop-shadow(0 0 16px rgba(255,70,85,0.8)); }
+}
+
+.logo-text { font-family: var(--font-head); font-size: 22px; font-weight: 800; letter-spacing: 0.08em; color: var(--text); }
+.logo-text span { color: var(--accent); }
+
+.live-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,70,85,0.1);
+  border: 1px solid rgba(255,70,85,0.25);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+/* ── PLAYER HERO ── */
+.player-hero {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 24px;
+  align-items: center;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.player-hero::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+
+.player-hero::after {
+  content: 'GAAZWAAL';
+  position: absolute;
+  right: -20px; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-head);
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.02);
+  letter-spacing: -4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.player-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d1b69, #7b61ff);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  border: 2px solid rgba(123,97,255,0.4);
+  flex-shrink: 0;
+}
+
+.player-details { min-width: 0; }
+.player-name {
+  font-family: var(--font-head);
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+.player-tag { font-family: var(--font-mono); font-size: 13px; color: var(--text2); margin-top: 4px; }
+.player-meta { display: flex; align-items: center; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
+.meta-chip {
+  font-size: 12px; color: var(--text2);
+  display: flex; align-items: center; gap: 5px;
+}
+.meta-chip strong { color: var(--text); font-weight: 500; }
+
+.rank-display { text-align: right; flex-shrink: 0; }
+.rank-tier {
+  font-family: var(--font-head);
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+}
+.rank-tier span { color: var(--text2); font-size: 28px; }
+.rank-sub { font-size: 11px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; font-family: var(--font-mono); }
+.rank-peak { font-size: 12px; color: var(--amber); margin-top: 4px; }
+
+/* ── NAV ── */
+.nav-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 24px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+}
+.nav-tab {
+  flex: 1;
+  padding: 9px 16px;
+  background: none;
+  border: none;
+  color: var(--text2);
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+.nav-tab:hover { color: var(--text); background: var(--bg3); }
+.nav-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── STATS GRID ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 16px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.kpi:hover { border-color: var(--border2); }
+.kpi::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.kpi:hover::before { opacity: 1; }
+.kpi.accent::before { background: var(--accent); }
+.kpi.purple::before { background: var(--accent2); }
+.kpi.green::before { background: var(--green); }
+.kpi.amber::before { background: var(--amber); }
+.kpi.mono::before { background: var(--text2); }
+
+.kpi-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: var(--font-head);
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.kpi-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.kpi-delta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  margin-top: 6px;
+  font-weight: 700;
+}
+.delta-up { color: var(--green); }
+.delta-dn { color: var(--red); }
+.delta-neu { color: var(--text3); }
+
+/* ── CHARTS ROW ── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.charts-row-3 {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.panel {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}
+.panel-title {
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel-title span { color: var(--text3); font-size: 11px; font-weight: 400; letter-spacing: 0; }
+
+.chart-box { position: relative; width: 100%; }
+
+/* ── WIN BAR ── */
+.wl-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.wl-w { background: var(--green); }
+.wl-l { background: var(--red); }
+.wl-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; }
+
+/* ── MATCH HISTORY ── */
+.match-table { width: 100%; border-collapse: collapse; }
+.match-table th {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.match-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  vertical-align: middle;
+}
+.match-table tr:last-child td { border-bottom: none; }
+.match-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+.res-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  border-radius: 4px;
+  font-family: var(--font-head);
+  font-size: 12px;
+  font-weight: 800;
+}
+.res-w { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.res-l { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+
+.map-name { font-weight: 500; color: var(--text); }
+.map-score { font-family: var(--font-mono); font-size: 12px; color: var(--text2); margin-top: 2px; }
+.kda-val { font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--text); }
+.stat-val { font-family: var(--font-mono); font-size: 13px; color: var(--text); }
+.hs-val { font-family: var(--font-mono); font-size: 13px; }
+.hs-good { color: var(--green); }
+.hs-ok { color: var(--amber); }
+.hs-bad { color: var(--red); }
+.acs-val { font-family: var(--font-head); font-size: 16px; font-weight: 800; }
+.acs-high { color: var(--green); }
+.acs-mid { color: var(--text); }
+.acs-low { color: var(--text2); }
+.date-val { font-family: var(--font-mono); font-size: 11px; color: var(--text3); }
+.kd-chip {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+.kd-up { background: rgba(74,222,128,0.15); color: var(--green); }
+.kd-dn { background: rgba(248,113,113,0.15); color: var(--red); }
+
+/* ── MAP BARS ── */
+.map-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 90px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.map-row:last-child { border-bottom: none; }
+.map-row-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--text); }
+.map-bar-wrap { height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.map-bar { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.map-row-stat { font-family: var(--font-mono); font-size: 11px; color: var(--text2); text-align: right; }
+
+/* ── COACH ── */
+.coach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.coach-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+}
+.coach-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.coach-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.coach-body { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+/* ── EVOLUTION ── */
+.evol-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+.view.active > * { animation: fadeIn 0.3s ease forwards; }
+
+/* ── HIGHLIGHT BEST ── */
+.best-game {
+  background: rgba(123,97,255,0.05);
+  border-color: rgba(123,97,255,0.2) !important;
+}
+
+.section-sep { height: 1px; background: var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <div class="logo-text">VAL<span>TRACK</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">EU · COMPETITIVE · S26:A3</div>
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    </div>
+  </header>
+
+  <!-- PLAYER HERO -->
+  <div class="player-hero">
+    <div class="player-avatar">GZ</div>
+    <div class="player-details">
+      <div class="player-name">GAAZWAAL</div>
+      <div class="player-tag">#GAZ</div>
+      <div class="player-meta">
+        <div class="meta-chip">🗺️ <strong>EU</strong></div>
+        <div class="meta-chip">🎮 <strong>43</strong> parties</div>
+        <div class="meta-chip">🏆 <strong>22W / 21L</strong></div>
+        <div class="meta-chip">⚡ <strong>Tracker Score C · 378</strong></div>
+      </div>
+    </div>
+    <div class="rank-display">
+      <div class="rank-tier">IRON <span>3</span></div>
+      <div class="rank-sub">Rang actuel</div>
+      <div class="rank-peak">⬆ Peak : Bronze 1</div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goTab('overview')">VUE GLOBALE</button>
+    <button class="nav-tab" onclick="goTab('matches')">HISTORIQUE</button>
+    <button class="nav-tab" onclick="goTab('evolution')">ÉVOLUTION</button>
+    <button class="nav-tab" onclick="goTab('maps')">MAPS</button>
+    <button class="nav-tab" onclick="goTab('coach')">COACH</button>
+  </div>
+
+  <!-- VIEW: OVERVIEW -->
+  <div id="view-overview" class="view active">
+    <div class="kpi-grid">
+      <div class="kpi accent">
+        <div class="kpi-label">K/D RATIO</div>
+        <div class="kpi-value">0.74</div>
+        <div class="kpi-sub">514K / 693D / 267A</div>
+        <div class="kpi-delta delta-dn">▼ négatif sur 43 parties</div>
+      </div>
+      <div class="kpi green">
+        <div class="kpi-label">WIN RATE</div>
+        <div class="kpi-value">51.2%</div>
+        <div class="kpi-sub">22V — 21D</div>
+        <div class="kpi-delta delta-up">▲ légèrement positif</div>
+      </div>
+      <div class="kpi purple">
+        <div class="kpi-label">ACS MOYEN</div>
+        <div class="kpi-value">174</div>
+        <div class="kpi-sub">avg combat score</div>
+        <div class="kpi-delta delta-up">▲ 230 sur 5 récentes</div>
+      </div>
+      <div class="kpi amber">
+        <div class="kpi-label">HEADSHOT %</div>
+        <div class="kpi-value">12.1%</div>
+        <div class="kpi-sub">objectif : 20%</div>
+        <div class="kpi-delta delta-dn">▼ principal frein</div>
+      </div>
+      <div class="kpi mono">
+        <div class="kpi-label">ADR MOYEN</div>
+        <div class="kpi-value">119</div>
+        <div class="kpi-sub">avg dmg/round</div>
+        <div class="kpi-delta delta-up">▲ best 195 (Corrode)</div>
+      </div>
+    </div>
+
+    <div class="charts-row-3">
+      <div class="panel">
+        <div class="panel-title">KDA GLOBALE <span>43 parties</span></div>
+        <div class="chart-box" style="height:200px">
+          <canvas id="kdaDonut" role="img" aria-label="514 kills 693 deaths 267 assists"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">W / L</div>
+        <div style="height:200px;display:flex;flex-direction:column;justify-content:center;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--green)">VICTOIRES</span>
+              <span style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--green)">22</span>
+            </div>
+            <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:51.2%;background:var(--green);border-radius:3px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--red)">DÉFAITES</span>
+              <span style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--red)">21</span>
+            </div>
+            <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:48.8%;background:var(--red);border-radius:3px"></div>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-family:var(--font-mono);font-size:11px;color:var(--text3);text-align:center">MVP × 1</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">PRÉCISION</div>
+        <div style="height:200px;display:flex;flex-direction:column;justify-content:center;gap:14px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">TÊTE</span>
+              <span style="font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--red)">12.1%</span>
+            </div>
+            <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:12.1%;background:var(--red);border-radius:3px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">CORPS</span>
+              <span style="font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--accent2)">76.9%</span>
+            </div>
+            <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:76.9%;background:var(--accent2);border-radius:3px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">JAMBES</span>
+              <span style="font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text2)">11.0%</span>
+            </div>
+            <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:11%;background:var(--text2);border-radius:3px"></div>
+            </div>
+          </div>
+          <div style="margin-top:4px;font-family:var(--font-mono);font-size:10px;color:var(--text3)">144 HS · 881 CORPS · 120 JAMBES</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="panel">
+        <div class="panel-title">ACS — 43 PARTIES <span>du plus ancien au plus récent</span></div>
+        <div class="chart-box" style="height:200px">
+          <canvas id="acsOverview" role="img" aria-label="ACS sur 43 parties">ACS</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">K/D — 43 PARTIES <span>objectif ligne rouge</span></div>
+        <div class="chart-box" style="height:200px">
+          <canvas id="kdOverview" role="img" aria-label="KD sur 43 parties">KD</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: MATCHES -->
+  <div id="view-matches" class="view">
+    <div class="panel">
+      <div class="panel-title">HISTORIQUE — 43 PARTIES COMPÉTITIVES <span>du plus récent au plus ancien</span></div>
+      <table class="match-table">
+        <thead>
+          <tr>
+            <th>RES</th>
+            <th>MAP · SCORE</th>
+            <th>KDA</th>
+            <th>K/D</th>
+            <th>ACS</th>
+            <th>HS%</th>
+            <th>ADR</th>
+            <th>DATE</th>
+          </tr>
+        </thead>
+        <tbody id="matchTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VIEW: EVOLUTION -->
+  <div id="view-evolution" class="view">
+    <div class="evol-grid">
+      <div class="panel">
+        <div class="panel-title">K/D PAR PARTIE <span>ligne ref = 1.0</span></div>
+        <div class="chart-box" style="height:220px">
+          <canvas id="kdEvol" role="img" aria-label="Evolution KD">KD</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">ACS PAR PARTIE <span>ligne ref = 200</span></div>
+        <div class="chart-box" style="height:220px">
+          <canvas id="acsEvol" role="img" aria-label="Evolution ACS">ACS</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">HEADSHOT % PAR PARTIE <span>objectif = 20%</span></div>
+        <div class="chart-box" style="height:220px">
+          <canvas id="hsEvol" role="img" aria-label="Evolution HS%">HS%</canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">ADR PAR PARTIE</div>
+        <div class="chart-box" style="height:220px">
+          <canvas id="adrEvol" role="img" aria-label="Evolution ADR">ADR</canvas>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">SÉRIE WINS/LOSSES <span>vert = victoire · rouge = défaite</span></div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;padding:8px 0">
+        <div id="wlStrip"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIEW: MAPS -->
+  <div id="view-maps" class="view">
+    <div class="charts-row">
+      <div class="panel">
+        <div class="panel-title">WINRATE PAR MAP</div>
+        <div id="mapWRList"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">ACS MOYEN PAR MAP</div>
+        <div class="chart-box" style="height:320px">
+          <canvas id="mapAcsChart" role="img" aria-label="ACS moyen par map">ACS map</canvas>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">DÉTAIL PAR MAP</div>
+      <table class="match-table">
+        <thead>
+          <tr><th>MAP</th><th>PARTIES</th><th>W/L</th><th>WINRATE</th><th>K/D MOY</th><th>ACS MOY</th><th>ADR MOY</th><th>HS% MOY</th></tr>
+        </thead>
+        <tbody id="mapDetailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VIEW: COACH -->
+  <div id="view-coach" class="view">
+    <div class="coach-grid" style="margin-bottom:20px">
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(248,113,113,0.15)">🎯</div>
+        <div>
+          <div class="coach-title">HS% critique — 12.1%</div>
+          <div class="coach-body">Tu tires 76.9% au corps. C'est ton plafond de verre absolu. Avant chaque session : 10 min sur The Range en mode cibles fixes, vise uniquement la tête. Résultat attendu en 2 semaines : +5 à 8 points de HS%.</div>
+        </div>
+      </div>
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(251,191,36,0.15)">💀</div>
+        <div>
+          <div class="coach-title">K/D négatif — 0.74 global</div>
+          <div class="coach-body">Tu meurs en moyenne plus que tu ne tues. La solution : joue plus passif. Ne prends jamais un duel ouvert seul. Attends que l'ennemi expose, utilise tes utilitaires pour forcer les positions. Objectif : passer à 0.90+ en 20 parties.</div>
+        </div>
+      </div>
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(74,222,128,0.15)">📈</div>
+        <div>
+          <div class="coach-title">Winrate 51.2% — base solide</div>
+          <div class="coach-body">Tu gagnes légèrement plus que tu ne perds sur 43 parties. Ce n'est pas un hasard. Tu as la lecture du jeu. En corrigeant juste le HS%, ton WR devrait monter à 55%+ mécaniquement.</div>
+        </div>
+      </div>
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(123,97,255,0.15)">⚡</div>
+        <div>
+          <div class="coach-title">Inconsistance — ACS 61 à 323</div>
+          <div class="coach-body">Tu peux faire 323 ACS (Corrode, MVP) et 61 ACS le même acte. L'ennemi principal c'est la tilt. Quand tu perds 2 rounds d'affilée, reset mentalement. Walk, respire, reprends ton placement de base.</div>
+        </div>
+      </div>
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(251,191,36,0.15)">🗺️</div>
+        <div>
+          <div class="coach-title">Maps à éviter : Abyss, Fracture</div>
+          <div class="coach-body">Tes pires perfs sont systématiquement sur Abyss (KD 0.12, 0.50...) et Fracture (0.18). Ces maps demandent une lecture verticale/spatiale différente. Évite-les en vote ou entraîne-toi dessus spécifiquement.</div>
+        </div>
+      </div>
+      <div class="coach-card">
+        <div class="coach-icon" style="background:rgba(74,222,128,0.15)">🏆</div>
+        <div>
+          <div class="coach-title">Points forts : Breeze & Split</div>
+          <div class="coach-body">Breeze : 2 parties, 1.50 et 1.24 KD — tu domines les longues distances. Split : 2 parties, 1.05 et 0.50 KD. Ces maps jouent à ton style. Priorise-les en vote, optimise dessus.</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">PROGRAMME D'ENTRAÎNEMENT RECOMMANDÉ</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:4px">
+        <div style="background:var(--bg3);border-radius:8px;padding:16px;border:1px solid var(--border)">
+          <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;margin-bottom:8px">AVANT CHAQUE SESSION</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">• 10 min The Range — cibles fixes, visée tête uniquement<br>• 5 min deathmatch — focus survival, pas les kills</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:16px;border:1px solid var(--border)">
+          <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--accent2);letter-spacing:.08em;margin-bottom:8px">PENDANT LES PARTIES</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">• Ne prends jamais un duel open 1v1<br>• Objectif : finir avec moins de morts que de kills<br>• Vote Breeze / Split / Pearl</div>
+        </div>
+        <div style="background:var(--bg3);border-radius:8px;padding:16px;border:1px solid var(--border)">
+          <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--green);letter-spacing:.08em;margin-bottom:8px">OBJECTIFS 30 PARTIES</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">• K/D : 0.74 → 0.90+<br>• HS% : 12% → 18%+<br>• ACS : 174 → 200+<br>• Rang : Iron 3 → Bronze 1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>GAAZWAAL#GAZ · EU · IRON 3 · S26:A3</div>
+    <div>43 parties importées · Mis à jour le 21/05/2025</div>
+    <div>VALTRACK · powered by Claude</div>
+  </footer>
+
+</div>
+
+<script>
+const MATCHES = [
+  {date:'21/05',map:'Pearl',sw:10,sl:13,kda:'14/22/8',k:14,d:22,a:8,kd:0.64,hs:11,adr:128,acs:190,result:'loss'},
+  {date:'21/05',map:'Breeze',sw:13,sl:7,kda:'18/12/7',k:18,d:12,a:7,kd:1.50,hs:14,adr:182,acs:273,result:'win'},
+  {date:'21/05',map:'Lotus',sw:13,sl:8,kda:'13/17/8',k:13,d:17,a:8,kd:0.76,hs:19,adr:113,acs:173,result:'win'},
+  {date:'21/05',map:'Fracture',sw:5,sl:13,kda:'3/17/5',k:3,d:17,a:5,kd:0.18,hs:9,adr:61,acs:84,result:'loss'},
+  {date:'20/05',map:'Split',sw:13,sl:8,kda:'20/19/11',k:20,d:19,a:11,kd:1.05,hs:17,adr:161,acs:261,result:'win'},
+  {date:'19/05',map:'Pearl',sw:2,sl:10,kda:'10/11/2',k:10,d:11,a:2,kd:0.91,hs:13,adr:156,acs:241,result:'loss'},
+  {date:'19/05',map:'Breeze',sw:13,sl:4,kda:'8/12/10',k:8,d:12,a:10,kd:0.67,hs:8,adr:109,acs:144,result:'win'},
+  {date:'19/05',map:'Pearl',sw:13,sl:11,kda:'14/18/9',k:14,d:18,a:9,kd:0.78,hs:12,adr:104,acs:162,result:'win'},
+  {date:'19/05',map:'Ascent',sw:10,sl:13,kda:'23/18/3',k:23,d:18,a:3,kd:1.28,hs:10,adr:155,acs:265,result:'loss'},
+  {date:'19/05',map:'Ascent',sw:8,sl:13,kda:'17/19/8',k:17,d:19,a:8,kd:0.89,hs:12,adr:161,acs:262,result:'loss'},
+  {date:'19/05',map:'Haven',sw:14,sl:12,kda:'17/18/13',k:17,d:18,a:13,kd:0.94,hs:15,adr:150,acs:223,result:'win'},
+  {date:'18/05',map:'Lotus',sw:6,sl:13,kda:'18/16/4',k:18,d:16,a:4,kd:1.13,hs:12,adr:192,acs:284,result:'loss'},
+  {date:'18/05',map:'Ascent',sw:13,sl:2,kda:'8/9/5',k:8,d:9,a:5,kd:0.89,hs:8,adr:111,acs:158,result:'win'},
+  {date:'17/05',map:'Haven',sw:5,sl:13,kda:'13/15/2',k:13,d:15,a:2,kd:0.87,hs:20,adr:159,acs:228,result:'loss'},
+  {date:'17/05',map:'Fracture',sw:13,sl:3,kda:'11/11/9',k:11,d:11,a:9,kd:1.00,hs:9,adr:122,acs:192,result:'win'},
+  {date:'17/05',map:'Split',sw:7,sl:13,kda:'8/16/4',k:8,d:16,a:4,kd:0.50,hs:3,adr:90,acs:124,result:'loss'},
+  {date:'17/05',map:'Fracture',sw:14,sl:12,kda:'14/19/8',k:14,d:19,a:8,kd:0.74,hs:14,adr:92,acs:138,result:'win'},
+  {date:'17/05',map:'Breeze',sw:16,sl:14,kda:'26/21/11',k:26,d:21,a:11,kd:1.24,hs:12,adr:157,acs:231,result:'win'},
+  {date:'17/05',map:'Ascent',sw:3,sl:13,kda:'8/13/7',k:8,d:13,a:7,kd:0.62,hs:8,adr:81,acs:129,result:'loss'},
+  {date:'15/05',map:'Pearl',sw:10,sl:13,kda:'17/19/6',k:17,d:19,a:6,kd:0.89,hs:12,adr:167,acs:233,result:'loss'},
+  {date:'15/05',map:'Haven',sw:8,sl:13,kda:'13/17/8',k:13,d:17,a:8,kd:0.76,hs:14,adr:158,acs:211,result:'loss'},
+  {date:'03/11',map:'Abyss',sw:8,sl:13,kda:'2/17/4',k:2,d:17,a:4,kd:0.12,hs:7,adr:47,acs:61,result:'loss'},
+  {date:'03/11',map:'Haven',sw:12,sl:14,kda:'7/20/2',k:7,d:20,a:2,kd:0.35,hs:20,adr:78,acs:94,result:'loss'},
+  {date:'14/10',map:'Sunset',sw:11,sl:13,kda:'10/17/7',k:10,d:17,a:7,kd:0.59,hs:5,adr:70,acs:114,result:'loss'},
+  {date:'14/10',map:'Lotus',sw:8,sl:13,kda:'8/16/7',k:8,d:16,a:7,kd:0.50,hs:8,adr:106,acs:134,result:'loss'},
+  {date:'14/10',map:'Abyss',sw:13,sl:6,kda:'14/14/2',k:14,d:14,a:2,kd:1.00,hs:17,adr:120,acs:177,result:'win'},
+  {date:'07/10',map:'Ascent',sw:13,sl:9,kda:'10/15/6',k:10,d:15,a:6,kd:0.67,hs:11,adr:92,acs:133,result:'win'},
+  {date:'07/10',map:'Sunset',sw:8,sl:13,kda:'12/17/4',k:12,d:17,a:4,kd:0.71,hs:24,adr:132,acs:170,result:'loss'},
+  {date:'06/10',map:'Bind',sw:3,sl:13,kda:'6/14/1',k:6,d:14,a:1,kd:0.43,hs:7,adr:68,acs:118,result:'loss'},
+  {date:'01/10',map:'Lotus',sw:13,sl:5,kda:'9/14/5',k:9,d:14,a:5,kd:0.64,hs:19,adr:105,acs:132,result:'win'},
+  {date:'30/09',map:'Ascent',sw:16,sl:14,kda:'18/20/9',k:18,d:20,a:9,kd:0.90,hs:8,adr:112,acs:164,result:'win'},
+  {date:'23/09',map:'Lotus',sw:6,sl:13,kda:'10/16/5',k:10,d:16,a:5,kd:0.63,hs:5,adr:101,acs:161,result:'loss'},
+  {date:'23/09',map:'Corrode',sw:13,sl:9,kda:'8/18/8',k:8,d:18,a:8,kd:0.44,hs:4,adr:85,acs:116,result:'win'},
+  {date:'23/09',map:'Corrode',sw:10,sl:4,kda:'12/10/4',k:12,d:10,a:4,kd:1.20,hs:13,adr:156,acs:227,result:'win'},
+  {date:'23/09',map:'Abyss',sw:14,sl:12,kda:'14/22/8',k:14,d:22,a:8,kd:0.64,hs:11,adr:118,acs:157,result:'win'},
+  {date:'23/09',map:'Ascent',sw:13,sl:9,kda:'10/17/13',k:10,d:17,a:13,kd:0.59,hs:11,adr:95,acs:148,result:'win'},
+  {date:'22/09',map:'Abyss',sw:6,sl:13,kda:'8/15/6',k:8,d:15,a:6,kd:0.53,hs:7,adr:97,acs:127,result:'loss'},
+  {date:'22/09',map:'Bind',sw:13,sl:8,kda:'7/15/2',k:7,d:15,a:2,kd:0.47,hs:6,adr:66,acs:104,result:'win'},
+  {date:'22/09',map:'Bind',sw:13,sl:10,kda:'6/17/6',k:6,d:17,a:6,kd:0.35,hs:23,adr:51,acs:80,result:'win'},
+  {date:'13/08',map:'Corrode',sw:13,sl:9,kda:'27/13/4',k:27,d:13,a:4,kd:2.08,hs:17,adr:195,acs:323,result:'win'},
+  {date:'12/08',map:'Lotus',sw:14,sl:12,kda:'5/17/8',k:5,d:17,a:8,kd:0.29,hs:13,adr:82,acs:95,result:'win'},
+  {date:'13/04',map:'Fracture',sw:0,sl:13,kda:'6/13/2',k:6,d:13,a:2,kd:0.46,hs:13,adr:111,acs:157,result:'loss'},
+  {date:'21/02',map:'Abyss',sw:10,sl:13,kda:'12/17/6',k:12,d:17,a:6,kd:0.71,hs:10,adr:100,acs:151,result:'loss'},
+];
+
+let charts = {};
+
+function goTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector(`[onclick="goTab('${name}')"]`).classList.add('active');
+  document.getElementById('view-' + name).classList.add('active');
+  if (name === 'evolution') renderEvol();
+  if (name === 'maps') renderMaps();
+}
+
+const gridColor = 'rgba(255,255,255,0.04)';
+const chartDefaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+};
+
+// KDA DONUT
+new Chart(document.getElementById('kdaDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Kills 514', 'Deaths 693', 'Assists 267'],
+    datasets: [{ data: [514, 693, 267], backgroundColor: ['#4ade80', '#f87171', '#7b61ff'], borderWidth: 0, hoverOffset: 6 }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false, cutout: '65%',
+    plugins: { legend: { position: 'bottom', labels: { color: '#8892a4', font: { size: 11, family: 'JetBrains Mono' }, boxWidth: 10, padding: 12 } } }
+  }
+});
+
+// ACS OVERVIEW
+const rev = [...MATCHES].reverse();
+new Chart(document.getElementById('acsOverview'), {
+  type: 'bar',
+  data: {
+    labels: rev.map((_, i) => `#${i + 1}`),
+    datasets: [{
+      data: rev.map(m => m.acs),
+      backgroundColor: rev.map(m => m.result === 'win' ? 'rgba(74,222,128,0.5)' : 'rgba(248,113,113,0.4)'),
+      borderRadius: 2, borderSkipped: false
+    }]
+  },
+  options: { ...chartDefaults, scales: { y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: '#4a5568', font: { size: 10 } } }, x: { display: false } } }
+});
+
+// KD OVERVIEW
+new Chart(document.getElementById('kdOverview'), {
+  type: 'line',
+  data: {
+    labels: rev.map((_, i) => `#${i + 1}`),
+    datasets: [
+      { data: rev.map(m => m.kd), borderColor: '#7b61ff', backgroundColor: 'rgba(123,97,255,0.08)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { data: rev.map(() => 1), borderColor: '#ff4655', borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }
+    ]
+  },
+  options: { ...chartDefaults, scales: { y: { min: 0, grid: { color: gridColor }, ticks: { color: '#4a5568', font: { size: 10 } } }, x: { display: false } } }
+});
+
+// MATCH TABLE
+const tbody = document.getElementById('matchTableBody');
+MATCHES.forEach((m, i) => {
+  const prev = MATCHES[i + 1];
+  let chip = '';
+  if (prev) {
+    const d = m.kd - prev.kd;
+    if (Math.abs(d) > 0.05) chip = `<span class="kd-chip ${d > 0 ? 'kd-up' : 'kd-dn'}">${d > 0 ? '↑' : '↓'}</span>`;
+  }
+  const hsClass = m.hs >= 20 ? 'hs-good' : m.hs >= 14 ? 'hs-ok' : 'hs-bad';
+  const acsClass = m.acs >= 250 ? 'acs-high' : m.acs >= 180 ? 'acs-mid' : 'acs-low';
+  const isBest = m.acs === 323;
+  tbody.innerHTML += `<tr ${isBest ? 'class="best-game"' : ''}>
+    <td><div class="res-badge ${m.result === 'win' ? 'res-w' : 'res-l'}">${m.result === 'win' ? 'V' : 'D'}</div></td>
+    <td><div class="map-name">${m.map}</div><div class="map-score">${m.sw} : ${m.sl}</div></td>
+    <td><span class="kda-val">${m.kda}</span>${chip}</td>
+    <td><span class="stat-val">${m.kd.toFixed(2)}</span></td>
+    <td><span class="acs-val ${acsClass}">${m.acs}</span></td>
+    <td><span class="hs-val ${hsClass}">${m.hs}%</span></td>
+    <td><span class="stat-val">${m.adr}</span></td>
+    <td><span class="date-val">${m.date}</span></td>
+  </tr>`;
+});
+
+// WL STRIP
+const strip = document.getElementById('wlStrip');
+strip.style.display = 'flex';
+strip.style.gap = '3px';
+strip.style.flexWrap = 'wrap';
+MATCHES.forEach(m => {
+  const sq = document.createElement('div');
+  sq.style.cssText = `width:18px;height:18px;border-radius:3px;background:${m.result === 'win' ? 'rgba(74,222,128,0.6)' : 'rgba(248,113,113,0.5)'};title="${m.map}"`;
+  sq.title = `${m.map} ${m.sw}-${m.sl} · KD ${m.kd}`;
+  strip.appendChild(sq);
+});
+
+function renderEvol() {
+  if (charts.kd) return;
+  const r = [...MATCHES].reverse();
+  const labels = r.map((_, i) => `#${i + 1}`);
+  const opts = (color, ref) => ({
+    ...chartDefaults,
+    scales: {
+      y: { min: 0, grid: { color: gridColor }, ticks: { color: '#4a5568', font: { size: 10 } } },
+      x: { grid: { display: false }, ticks: { color: '#4a5568', font: { size: 9 }, autoSkip: true, maxTicksLimit: 10 } }
+    }
+  });
+
+  charts.kd = new Chart(document.getElementById('kdEvol'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: r.map(m => m.kd), borderColor: '#4ade80', backgroundColor: 'rgba(74,222,128,0.06)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { data: labels.map(() => 1), borderColor: '#ff4655', borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }
+    ]},
+    options: opts()
+  });
+  charts.acs = new Chart(document.getElementById('acsEvol'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: r.map(m => m.acs), borderColor: '#7b61ff', backgroundColor: 'rgba(123,97,255,0.06)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { data: labels.map(() => 200), borderColor: '#8892a4', borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }
+    ]},
+    options: opts()
+  });
+  charts.hs = new Chart(document.getElementById('hsEvol'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { data: r.map(m => m.hs), borderColor: '#f87171', backgroundColor: 'rgba(248,113,113,0.06)', fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2 },
+      { data: labels.map(() => 20), borderColor: '#fbbf24', borderDash: [4, 4], pointRadius: 0, borderWidth: 1 }
+    ]},
+    options: opts()
+  });
+  charts.adr = new Chart(document.getElementById('adrEvol'), {
+    type: 'bar',
+    data: { labels, datasets: [{ data: r.map(m => m.adr), backgroundColor: 'rgba(123,97,255,0.5)', borderRadius: 2 }] },
+    options: opts()
+  });
+}
+
+function renderMaps() {
+  if (charts.mapAcs) return;
+  const byMap = {};
+  MATCHES.forEach(m => {
+    if (!byMap[m.map]) byMap[m.map] = { g: 0, w: 0, kd: 0, acs: 0, adr: 0, hs: 0 };
+    byMap[m.map].g++; byMap[m.map].w += (m.result === 'win' ? 1 : 0);
+    byMap[m.map].kd += m.kd; byMap[m.map].acs += m.acs; byMap[m.map].adr += m.adr; byMap[m.map].hs += m.hs;
+  });
+  const sorted = Object.entries(byMap).sort((a, b) => b[1].g - a[1].g);
+
+  // WR list
+  const wrList = document.getElementById('mapWRList');
+  sorted.forEach(([map, s]) => {
+    const wr = Math.round(s.w / s.g * 100);
+    const col = wr >= 60 ? '#4ade80' : wr >= 45 ? '#fbbf24' : '#f87171';
+    wrList.innerHTML += `<div class="map-row">
+      <div class="map-row-name">${map}</div>
+      <div class="map-bar-wrap"><div class="map-bar" style="width:${wr}%;background:${col}"></div></div>
+      <div class="map-row-stat" style="color:${col}">${wr}% <span style="color:#4a5568">(${s.g}g)</span></div>
+    </div>`;
+  });
+
+  // ACS chart
+  charts.mapAcs = new Chart(document.getElementById('mapAcsChart'), {
+    type: 'bar',
+    data: {
+      labels: sorted.map(([k]) => k),
+      datasets: [{ data: sorted.map(([, v]) => Math.round(v.acs / v.g)), backgroundColor: '#7b61ff', borderRadius: 4, borderSkipped: false }]
+    },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: '#4a5568', font: { size: 10 } } }, y: { grid: { display: false }, ticks: { color: '#8892a4', font: { size: 11, family: 'JetBrains Mono' } } } } }
+  });
+
+  // Map detail table
+  const tbody2 = document.getElementById('mapDetailBody');
+  sorted.forEach(([map, s]) => {
+    const wr = Math.round(s.w / s.g * 100);
+    const col = wr >= 60 ? '#4ade80' : wr >= 45 ? '#fbbf24' : '#f87171';
+    tbody2.innerHTML += `<tr>
+      <td style="font-family:var(--font-head);font-size:15px;font-weight:700">${map}</td>
+      <td style="font-family:var(--font-mono)">${s.g}</td>
+      <td style="font-family:var(--font-mono);color:var(--text2)">${s.w}W / ${s.g - s.w}L</td>
+      <td style="font-family:var(--font-mono);font-weight:700;color:${col}">${wr}%</td>
+      <td style="font-family:var(--font-mono)">${(s.kd / s.g).toFixed(2)}</td>
+      <td style="font-family:var(--font-head);font-size:16px;font-weight:800">${Math.round(s.acs / s.g)}</td>
+      <td style="font-family:var(--font-mono)">${Math.round(s.adr / s.g)}</td>
+      <td style="font-family:var(--font-mono)">${Math.round(s.hs / s.g)}%</td>
+    </tr>`;
+  });
+}
+</script>
+</body>
+</html>
